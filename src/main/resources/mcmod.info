@@ -1,0 +1,16 @@
+[
+{
+  "modid": "${archivesBaseName}",
+  "name": "${displayName}",
+  "description": "Consolidated patches for mods that are EOL used in SevTech: Ages",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["BobbyTables"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
