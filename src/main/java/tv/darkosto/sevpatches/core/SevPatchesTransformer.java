@@ -189,17 +189,16 @@ public class SevPatchesTransformer implements IClassTransformer {
 
             for (ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator(); it.hasNext(); ) {
                 AbstractInsnNode insnNode = it.next();
-                if (insnNode instanceof LineNumberNode) {
-                    LineNumberNode lnn = (LineNumberNode) insnNode;
+                if (insnNode.getNext() instanceof LineNumberNode) {
+                    LineNumberNode lnn = (LineNumberNode) insnNode.getNext();
                     if (lnn.line == 19) {
-                        methodNode.instructions.remove(insnNode.getPrevious());
                         do {
                             methodNode.instructions.remove(insnNode);
                             insnNode = it.next();
                         } while (!(insnNode instanceof LabelNode));
                     }
                     if (lnn.line == 44) {
-                        methodNode.instructions.insertBefore(insnNode.getPrevious(), eventFire);
+                        methodNode.instructions.insertBefore(insnNode, eventFire);
                     }
                 }
             }
