@@ -24,6 +24,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return this.inControlTransform(basicClass);
             case "blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress":
                 return this.metalPressTransform(basicClass);
+            case "hellfirepvp.astralsorcery.common.enchantment.amulet.EnchantmentUpgradeHelper":
+                return this.amuletTransform(basicClass);
             default:
                 return basicClass;
         }
@@ -45,6 +47,51 @@ public class SevPatchesTransformer implements IClassTransformer {
                     ));
             }
         }
+    }
+
+    /**
+     * DarkPacks/SevTech-Ages#
+     */
+    private byte[] amuletTransform(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        for (MethodNode methodNode : classNode.methods) {
+            if (!methodNode.name.equals("modifyEnchantmentTags")) continue;
+
+            for (ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator(); it.hasNext(); ) {
+                AbstractInsnNode insnNode = it.next();
+
+                if (!(insnNode instanceof LdcInsnNode) || !((LdcInsnNode) insnNode).cst.equals("id")) continue;
+
+                boolean foundTarget = false;
+                while (!foundTarget) {
+                    do {
+                        insnNode = it.next();
+                    } while (!(insnNode instanceof MethodInsnNode));
+
+                    MethodInsnNode methodInsnNode = (MethodInsnNode) insnNode;
+                    if (methodInsnNode.name.equals(SevPatchesLoadingPlugin.GET_SHORT)) {
+                        methodInsnNode.name = SevPatchesLoadingPlugin.GET_INT;
+                        methodInsnNode.desc = "(Ljava/lang/String;)I";
+
+                        foundTarget = true;
+                    } else if (methodInsnNode.name.equals(SevPatchesLoadingPlugin.SET_SHORT)) {
+                        methodInsnNode.name = SevPatchesLoadingPlugin.SET_INT;
+                        methodInsnNode.desc = "(Ljava/lang/String;I)V";
+
+                        methodNode.instructions.remove(methodInsnNode.getPrevious()); // remove I2S
+                        foundTarget = true;
+                    }
+                }
+            }
+        }
+
+        ClassWriter classWriter = new ClassWriter(0);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
     }
 
     /**

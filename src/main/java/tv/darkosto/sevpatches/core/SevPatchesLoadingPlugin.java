@@ -14,6 +14,12 @@ import java.util.Map;
 public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static Logger LOGGER = LogManager.getLogger("sevpatches_core");
 
+    public static String GET_SHORT;
+    public static String SET_SHORT;
+
+    public static String GET_INT;
+    public static String SET_INT;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -38,7 +44,12 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
+        boolean dev = !(boolean) data.get("runtimeDeobfuscationEnabled");
+        SevPatchesLoadingPlugin.GET_SHORT = dev ? "getShort" : "func_74765_d";
+        SevPatchesLoadingPlugin.SET_SHORT = dev ? "setShort" : "func_74777_a";
 
+        SevPatchesLoadingPlugin.GET_INT = dev ? "getInteger" : "func_74762_e";
+        SevPatchesLoadingPlugin.SET_INT = dev ? "setInteger" : "func_74768_a";
     }
 
     @Override
