@@ -1,11 +1,11 @@
 [
 {
-  "modid": "${archivesBaseName}",
-  "name": "${displayName}",
+  "modid": "sevpatches",
+  "name": "SevPatches",
   "description": "Consolidated patches for mods that are EOL used in SevTech: Ages",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
+  "version": "1.1",
+  "mcversion": "1.12.2",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/sevpatches",
   "updateUrl": "",
   "authorList": ["BobbyTables"],
   "credits": "",
