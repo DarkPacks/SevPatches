@@ -24,11 +24,11 @@ apply plugin: 'maven-publish'
 def buildnumber = null
 
 if (System.getenv('GITHUB_ACTIONS'))
-    buildnumber = System.getenv('GITHUB_WORKFLOW') == 'Release' ? ".${System.getenv('GITHUB_RUN_NUMBER')}" : "-${System.getenv('GITHUB_SHA').substring(0, 7)}"
+    buildnumber = System.getenv('GITHUB_WORKFLOW') == 'Release' ? System.getenv('GITHUB_RUN_NUMBER') : System.getenv('GITHUB_SHA').substring(0, 7)
 
-def suffix = buildnumber != null ? "$buildnumber" : '-SNAPSHOT'
+def suffix = buildnumber != null ? buildnumber : 'SNAPSHOT'
 
-version = "1.1$suffix"
+version = "$version_base-$suffix"
 group = 'tv.darkosto.sevpatches'
 archivesBaseName = 'sevpatches'
 
