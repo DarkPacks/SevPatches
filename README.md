@@ -30,3 +30,9 @@ overwritten by JEID.
 
 This restores functionality to the Resplendent Prism, though in an ideal world the first component of this patch would
 be handled by JEID, whilst the second would be unnecessary if JEID didn't use an overwrite mixin.
+
+#### [DarkPacks/SevTech-Ages#3522](https://www.github.com/DarkPacks/SevTech-Ages/issues/3522)
+Patches Galacticraft Core. In the method BlockBasic#getPickBlock, Galacticraft retrieves the blockstate from the world
+rather than using the state passed in to the method. This leaves it incompatible with Scannable which does not pass in
+the BlockPos when calling Block#getPickBlock. This patch simply removes the call to World#getBlockState, replacing it
+with the state from the argument.

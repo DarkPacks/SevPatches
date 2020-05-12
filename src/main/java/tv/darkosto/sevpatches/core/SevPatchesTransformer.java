@@ -1,8 +1,6 @@
 package tv.darkosto.sevpatches.core;
 
 import net.minecraft.launchwrapper.IClassTransformer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
@@ -13,8 +11,6 @@ import java.util.Arrays;
 import java.util.ListIterator;
 
 public class SevPatchesTransformer implements IClassTransformer {
-    Logger logger = LogManager.getLogger("sevpatches");
-
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         switch (transformedName) {
@@ -26,6 +22,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return this.metalPressTransform(basicClass);
             case "hellfirepvp.astralsorcery.common.enchantment.amulet.EnchantmentUpgradeHelper":
                 return this.amuletTransform(basicClass);
+            case "micdoodle8.mods.galacticraft.core.blocks.BlockBasic":
+                return this.galacticraftBlockTransform(basicClass);
             default:
                 return basicClass;
         }
@@ -34,6 +32,7 @@ public class SevPatchesTransformer implements IClassTransformer {
     private void setEventSubPriority(ClassNode input, String targetMethod, String priority) {
         for (MethodNode methodNode : input.methods) {
             if (!methodNode.name.equals(targetMethod)) continue;
+            SevPatchesLoadingPlugin.LOGGER.info("Altering priority of handler: {} to: {}", targetMethod, priority);
             for (AnnotationNode annotationNode : methodNode.visibleAnnotations) {
                 if (!annotationNode.desc.equals("Lnet/minecraftforge/fml/common/eventhandler/SubscribeEvent;"))
                     continue;
@@ -50,7 +49,33 @@ public class SevPatchesTransformer implements IClassTransformer {
     }
 
     /**
-     * DarkPacks/SevTech-Ages#
+     * DarkPacks/SevTech-Ages#3522
+     */
+    private byte[] galacticraftBlockTransform(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        for (MethodNode methodNode : classNode.methods) {
+            if (!methodNode.name.equals("getPickBlock")) continue;
+            for (ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator(); it.hasNext(); ) {
+                AbstractInsnNode insnNode = it.next();
+                if (insnNode instanceof MethodInsnNode && ((MethodInsnNode) insnNode).name.equals(SevPatchesLoadingPlugin.GET_BLOCK_STATE)) {
+                    methodNode.instructions.remove(insnNode.getPrevious());
+                    ((VarInsnNode) insnNode.getPrevious()).var = 1;
+                    methodNode.instructions.remove(insnNode);
+                }
+            }
+        }
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
+    }
+
+    /**
+     * DarkPacks/SevTech-Ages#4091
      */
     private byte[] amuletTransform(byte[] basicClass) {
         ClassReader classReader = new ClassReader(basicClass);
@@ -119,7 +144,7 @@ public class SevPatchesTransformer implements IClassTransformer {
             }
 
             if (targetInsnNodeIndex == -1) {
-                logger.warn("No location matching the target");
+                SevPatchesLoadingPlugin.LOGGER.warn("No location matching the target");
                 continue;
             }
 
@@ -134,7 +159,7 @@ public class SevPatchesTransformer implements IClassTransformer {
                 }
             }
             if (jumpLocation == null) {
-                logger.warn("Couldn't find jump location");
+                SevPatchesLoadingPlugin.LOGGER.warn("Couldn't find jump location");
                 continue;
             }
 

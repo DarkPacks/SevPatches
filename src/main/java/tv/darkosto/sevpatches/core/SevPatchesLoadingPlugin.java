@@ -20,6 +20,8 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String GET_INT;
     public static String SET_INT;
 
+    public static String GET_BLOCK_STATE;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -50,6 +52,8 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
         SevPatchesLoadingPlugin.GET_INT = dev ? "getInteger" : "func_74762_e";
         SevPatchesLoadingPlugin.SET_INT = dev ? "setInteger" : "func_74768_a";
+
+        SevPatchesLoadingPlugin.GET_BLOCK_STATE = dev ? "getBlockState" : "func_180495_p";
     }
 
     @Override
