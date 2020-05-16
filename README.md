@@ -36,3 +36,9 @@ Patches Galacticraft Core. In the method BlockBasic#getPickBlock, Galacticraft r
 rather than using the state passed in to the method. This leaves it incompatible with Scannable which does not pass in
 the BlockPos when calling Block#getPickBlock. This patch simply removes the call to World#getBlockState, replacing it
 with the state from the argument.
+
+#### Just A Few Fish Augmentation (JAFFA)
+A set of three patches to JAFF which together serve to implement vanilla spawning mechanics.
+  * Removes JAFF's own spawn loop
+  * Register vanilla spawns and placement types
+  * Implement EntityFish#isNotColliding, overriding EntityAnimal's implementation which prevents spawning in water.

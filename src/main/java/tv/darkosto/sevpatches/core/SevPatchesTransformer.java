@@ -24,6 +24,12 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return this.amuletTransform(basicClass);
             case "micdoodle8.mods.galacticraft.core.blocks.BlockBasic":
                 return this.galacticraftBlockTransform(basicClass);
+            case "com.tmtravlr.jaff.JAFFEventHandler":
+                return this.unnecessaryLagRemover(basicClass);
+            case "com.tmtravlr.jaff.JAFFMod":
+                return this.fishLiveInWater(basicClass);
+            case "com.tmtravlr.jaff.entities.EntityFish":
+                return this.fishAreFish(basicClass);
             default:
                 return basicClass;
         }
@@ -46,6 +52,152 @@ public class SevPatchesTransformer implements IClassTransformer {
                     ));
             }
         }
+    }
+
+    /**
+     * Make JAFF fish behave like fish
+     * The JAFFA patch
+     */
+    private byte[] unnecessaryLagRemover(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        for (MethodNode methodNode : classNode.methods) {
+            if (!methodNode.name.equals("onWorldTick")) continue;
+            for (AnnotationNode annotationNode : methodNode.visibleAnnotations) {
+                if (!annotationNode.desc.equals("Lnet/minecraftforge/fml/common/eventhandler/SubscribeEvent;"))
+                    continue;
+
+                methodNode.visibleAnnotations.remove(annotationNode);
+                SevPatchesLoadingPlugin.LOGGER.info("Disabling custom spawn logic in JAFF");
+                break;
+            }
+        }
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
+    }
+
+    private byte[] fishLiveInWater(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        MethodNode preInit = null;
+        MethodNode postInit = null;
+
+        for (MethodNode methodNode : classNode.methods) {
+            if (methodNode.name.equals("preInit")) preInit = methodNode;
+            if (methodNode.name.equals("postInit")) postInit = methodNode;
+        }
+
+        if (preInit == null || postInit == null) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Failed to find JAFF init methods");
+            return basicClass;
+        }
+
+        InsnList callRegisterPlacement = new InsnList();
+        callRegisterPlacement.add(new MethodInsnNode(
+                Opcodes.INVOKESTATIC,
+                "tv/darkosto/sevpatches/core/FishHook",
+                "registerPlacement",
+                "()V",
+                false
+        ));
+
+        InsnNode preInitReturn = null;
+        for (ListIterator<AbstractInsnNode> it = preInit.instructions.iterator(); it.hasNext(); ) {
+            AbstractInsnNode insnNode = it.next();
+
+            if (insnNode.getOpcode() == Opcodes.RETURN) preInitReturn = (InsnNode) insnNode;
+        }
+
+        if (preInitReturn != null)
+            preInit.instructions.insertBefore(preInitReturn, callRegisterPlacement);
+
+        InsnList callRegisterSpawns = new InsnList();
+        callRegisterSpawns.add(new MethodInsnNode(
+                Opcodes.INVOKESTATIC,
+                "tv/darkosto/sevpatches/core/FishHook",
+                "registerSpawns",
+                "()V",
+                false
+        ));
+
+        InsnNode postInitReturn = null;
+        for (ListIterator<AbstractInsnNode> it = postInit.instructions.iterator(); it.hasNext(); ) {
+            AbstractInsnNode insnNode = it.next();
+
+            if (insnNode.getOpcode() == Opcodes.RETURN) postInitReturn = (InsnNode) insnNode;
+        }
+
+        if (postInitReturn != null)
+            postInit.instructions.insertBefore(postInitReturn, callRegisterSpawns);
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
+    }
+
+    private byte[] fishAreFish(byte[] basicClass) {
+        SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch in progress");
+
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        MethodNode isFishNotColliding = new MethodNode(
+                Opcodes.ACC_PUBLIC,
+                SevPatchesLoadingPlugin.ENTITY_IS_NOT_COLLIDING,
+                "()Z",
+                null,
+                null
+        );
+        InsnList fishyInsns = isFishNotColliding.instructions;
+        fishyInsns.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        fishyInsns.add(new FieldInsnNode(
+                Opcodes.GETFIELD,
+                "com/tmtravlr/jaff/entities/EntityFish",
+                SevPatchesLoadingPlugin.ENTITY_WORLD,
+                "Lnet/minecraft/world/World;"
+        ));
+        fishyInsns.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        fishyInsns.add(new MethodInsnNode(
+                Opcodes.INVOKEVIRTUAL,
+                "com/tmtravlr/jaff/entities/EntityFish",
+                SevPatchesLoadingPlugin.GET_ENTITY_BOUNDING_BOX,
+                "()Lnet/minecraft/util/math/AxisAlignedBB;",
+                false
+        ));
+        fishyInsns.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        fishyInsns.add(new MethodInsnNode(
+                Opcodes.INVOKEVIRTUAL,
+                "net/minecraft/world/World",
+                SevPatchesLoadingPlugin.CHECK_NO_ENTITY_COLLISION,
+                "(Lnet/minecraft/util/math/AxisAlignedBB;Lnet/minecraft/entity/Entity;)Z",
+                false
+        ));
+        fishyInsns.add(new InsnNode(Opcodes.IRETURN));
+        classNode.methods.add(isFishNotColliding);
+        SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch: implemented isNotColliding");
+
+        for (MethodNode methodNode : classNode.methods) {
+            if (!methodNode.name.equals(SevPatchesLoadingPlugin.ENTITY_GET_CAN_SPAWN_HERE)) continue;
+            InsnList replacement = new InsnList();
+            replacement.add(new InsnNode(Opcodes.ICONST_1));
+            replacement.add(new InsnNode(Opcodes.IRETURN));
+            methodNode.instructions = replacement;
+            SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch: getCanSpawnHere now always true");
+        }
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
     }
 
     /**

@@ -81,6 +81,7 @@ dependencies {
     }
 
     compile fg.deobf('curse.maven:astralsorcery-1.0.23:2920254')
+    compile fg.deobf('curse.maven:jaff-1.7:2448283')
 }
 
 mixin {

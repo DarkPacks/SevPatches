@@ -22,6 +22,12 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
     public static String GET_BLOCK_STATE;
 
+    public static String ENTITY_WORLD;
+    public static String ENTITY_IS_NOT_COLLIDING;
+    public static String ENTITY_GET_CAN_SPAWN_HERE;
+    public static String GET_ENTITY_BOUNDING_BOX;
+    public static String CHECK_NO_ENTITY_COLLISION;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -54,6 +60,12 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.SET_INT = dev ? "setInteger" : "func_74768_a";
 
         SevPatchesLoadingPlugin.GET_BLOCK_STATE = dev ? "getBlockState" : "func_180495_p";
+
+        SevPatchesLoadingPlugin.ENTITY_WORLD = dev ? "world" : "field_70170_p";
+        SevPatchesLoadingPlugin.ENTITY_IS_NOT_COLLIDING = dev ? "isNotColliding" : "func_70058_J";
+        SevPatchesLoadingPlugin.ENTITY_GET_CAN_SPAWN_HERE = dev ? "getCanSpawnHere" : "func_70601_bi";
+        SevPatchesLoadingPlugin.GET_ENTITY_BOUNDING_BOX = dev ? "getEntityBoundingBox" : "func_174813_aQ";
+        SevPatchesLoadingPlugin.CHECK_NO_ENTITY_COLLISION = dev ? "checkNoEntityCollision" : "func_72917_a";
     }
 
     @Override
