@@ -42,3 +42,8 @@ A set of three patches to JAFF which together serve to implement vanilla spawnin
   * Removes JAFF's own spawn loop
   * Register vanilla spawns and placement types
   * Implement EntityFish#isNotColliding, overriding EntityAnimal's implementation which prevents spawning in water.
+
+#### Less cheaty Bootes Ritaul
+In SevTech, a number of mods make changes to animal drops using the LivingDropsEvent, though by default the Bootes
+ritual does not fire this event. This patches Astral Sorcery's CEffectBootes so that LivingDropsEvent is fired and the
+mutated drops array is used instead of the raw loot table.

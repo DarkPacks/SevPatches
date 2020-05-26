@@ -22,6 +22,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return this.metalPressTransform(basicClass);
             case "hellfirepvp.astralsorcery.common.enchantment.amulet.EnchantmentUpgradeHelper":
                 return this.amuletTransform(basicClass);
+            case "hellfirepvp.astralsorcery.common.constellation.effect.aoe.CEffectBootes":
+                return this.bootesRealDrops(basicClass);
             case "micdoodle8.mods.galacticraft.core.blocks.BlockBasic":
                 return this.galacticraftBlockTransform(basicClass);
             case "com.tmtravlr.jaff.JAFFEventHandler":
@@ -272,6 +274,76 @@ public class SevPatchesTransformer implements IClassTransformer {
         }
 
         ClassWriter classWriter = new ClassWriter(0);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
+    }
+
+    /**
+     * Less cheaty Bootes ritual
+     */
+    private byte[] bootesRealDrops(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        MethodNode playEffectMN = null;
+        for (MethodNode methodNode : classNode.methods) {
+            if (!methodNode.name.equals("playEffect")) continue;
+            playEffectMN = methodNode;
+            break;
+        }
+
+        if (playEffectMN == null) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Couldn't find target method node: CEffectBootes#playEffect");
+            return basicClass;
+        }
+
+        MethodInsnNode insertionPoint = null;
+        boolean foundEnd = false;
+
+        for (ListIterator<AbstractInsnNode> it = playEffectMN.instructions.iterator(); it.hasNext(); ) {
+            AbstractInsnNode insnNode = it.next();
+            if (!(insnNode instanceof MethodInsnNode)) continue;
+            if (!((MethodInsnNode) insnNode).name.equals("getHerdingDropsTick")) continue;
+            insertionPoint = (MethodInsnNode) insnNode;
+            while (it.hasNext()) {
+                if (insnNode.getNext() instanceof LabelNode && insnNode.getNext().getNext() instanceof LineNumberNode && ((LineNumberNode) insnNode.getNext().getNext()).line == 78) {
+                    foundEnd = true;
+                    break;
+                }
+                playEffectMN.instructions.remove(insnNode.getNext());
+            }
+            break;
+        }
+
+        if (insertionPoint == null || !foundEnd) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Could not find target instruction: INVOKE getHerdingDropsTick, or failed to find end. Skipping patch.");
+            return basicClass;
+        }
+
+        InsnList insnList = new InsnList();
+        insnList.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        insnList.add(new VarInsnNode(Opcodes.ALOAD, 9));
+        insnList.add(new VarInsnNode(Opcodes.ILOAD, 6));
+        insnList.add(new FieldInsnNode(
+                Opcodes.GETSTATIC,
+                "hellfirepvp/astralsorcery/common/constellation/effect/aoe/CEffectBootes",
+                "rand",
+                "Ljava/util/Random;"
+        ));
+        insnList.add(new MethodInsnNode(
+                Opcodes.INVOKESTATIC,
+                "tv/darkosto/sevpatches/core/hooks/BootesHook",
+                "handleBootesDrops",
+                "(Ljava/util/List;Lnet/minecraft/world/World;Lnet/minecraft/entity/EntityLivingBase;ZLjava/util/Random;)Z",
+                false
+        ));
+        insnList.add(new VarInsnNode(Opcodes.ISTORE, 6));
+
+        playEffectMN.instructions.insert(insertionPoint, insnList);
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(classWriter);
         return classWriter.toByteArray();
     }
