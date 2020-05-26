@@ -55,8 +55,8 @@ public class SevPatchesTransformer implements IClassTransformer {
     }
 
     /**
-     * Make JAFF fish behave like fish
-     * The JAFFA patch
+     * <p>Make JAFF fish behave like fish</p>
+     * <p>The JAFFA patch</p>
      */
     private byte[] unnecessaryLagRemover(byte[] basicClass) {
         ClassReader classReader = new ClassReader(basicClass);
@@ -103,7 +103,7 @@ public class SevPatchesTransformer implements IClassTransformer {
         InsnList callRegisterPlacement = new InsnList();
         callRegisterPlacement.add(new MethodInsnNode(
                 Opcodes.INVOKESTATIC,
-                "tv/darkosto/sevpatches/core/FishHook",
+                "tv/darkosto/sevpatches/core/hooks/FishHook",
                 "registerPlacement",
                 "()V",
                 false
@@ -122,7 +122,7 @@ public class SevPatchesTransformer implements IClassTransformer {
         InsnList callRegisterSpawns = new InsnList();
         callRegisterSpawns.add(new MethodInsnNode(
                 Opcodes.INVOKESTATIC,
-                "tv/darkosto/sevpatches/core/FishHook",
+                "tv/darkosto/sevpatches/core/hooks/FishHook",
                 "registerSpawns",
                 "()V",
                 false
@@ -151,6 +151,11 @@ public class SevPatchesTransformer implements IClassTransformer {
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, 0);
 
+        /*
+        public boolean isNotColliding() {
+            this.world.checkNoEntityCollision(this.getEntityBoundingBox(), this);
+        }
+         */
         MethodNode isFishNotColliding = new MethodNode(
                 Opcodes.ACC_PUBLIC,
                 SevPatchesLoadingPlugin.ENTITY_IS_NOT_COLLIDING,
@@ -190,7 +195,7 @@ public class SevPatchesTransformer implements IClassTransformer {
             if (!methodNode.name.equals(SevPatchesLoadingPlugin.ENTITY_GET_CAN_SPAWN_HERE)) continue;
             InsnList replacement = new InsnList();
             replacement.add(new InsnNode(Opcodes.ICONST_1));
-            replacement.add(new InsnNode(Opcodes.IRETURN));
+            replacement.add(new InsnNode(Opcodes.IRETURN));  // return true
             methodNode.instructions = replacement;
             SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch: getCanSpawnHere now always true");
         }

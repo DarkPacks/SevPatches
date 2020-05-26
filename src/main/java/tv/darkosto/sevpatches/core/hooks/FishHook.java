@@ -1,4 +1,4 @@
-package tv.darkosto.sevpatches.core;
+package tv.darkosto.sevpatches.core.hooks;
 
 import com.tmtravlr.jaff.entities.*;
 import net.minecraft.entity.EntityLiving;
@@ -7,6 +7,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import tv.darkosto.sevpatches.core.SevPatchesLoadingPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
