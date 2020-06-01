@@ -1,5 +1,6 @@
 package tv.darkosto.sevpatches.core.hooks;
 
+import com.tmtravlr.jaff.ConfigOptions;
 import com.tmtravlr.jaff.entities.*;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -33,12 +34,18 @@ public class FishHook {
         landWaterBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.RIVER));
         landWaterBiomes.addAll(BiomeDictionary.getBiomes(BiomeDictionary.Type.SWAMP));
 
-        EntityRegistry.addSpawn(EntityFishCod.class, 40, 4, 4, EnumCreatureType.WATER_CREATURE, waterBiomes.toArray(new Biome[0]));
-        EntityRegistry.addSpawn(EntityFishClownfish.class, 12, 4, 4, EnumCreatureType.WATER_CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).toArray(new Biome[0]));
-        EntityRegistry.addSpawn(EntityFishPufferfish.class, 8, 1, 1, EnumCreatureType.WATER_CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).toArray(new Biome[0]));
-        EntityRegistry.addSpawn(EntityFishSalmon.class, 4, 4, 4, EnumCreatureType.WATER_CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).toArray(new Biome[0]));
-        EntityRegistry.addSpawn(EntityFishSalmon.class, 40, 4, 4, EnumCreatureType.WATER_CREATURE, landWaterBiomes.toArray(new Biome[0]));
-
-        SevPatchesLoadingPlugin.LOGGER.info(EntitySpawnPlacementRegistry.getPlacementForEntity(EntityFishCod.class));
+        if (ConfigOptions.enableCod) {
+            EntityRegistry.addSpawn(EntityFishCod.class, 40, 4, 4, EnumCreatureType.WATER_CREATURE, waterBiomes.toArray(new Biome[0]));
+        }
+        if (ConfigOptions.enableClownfish) {
+            EntityRegistry.addSpawn(EntityFishClownfish.class, 12, 4, 4, EnumCreatureType.WATER_CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).toArray(new Biome[0]));
+        }
+        if (ConfigOptions.enablePufferfish) {
+            EntityRegistry.addSpawn(EntityFishPufferfish.class, 8, 1, 1, EnumCreatureType.WATER_CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).toArray(new Biome[0]));
+        }
+        if (ConfigOptions.enableSalmon) {
+            EntityRegistry.addSpawn(EntityFishSalmon.class, 4, 4, 4, EnumCreatureType.WATER_CREATURE, BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).toArray(new Biome[0]));
+            EntityRegistry.addSpawn(EntityFishSalmon.class, 40, 4, 4, EnumCreatureType.WATER_CREATURE, landWaterBiomes.toArray(new Biome[0]));
+        }
     }
 }
