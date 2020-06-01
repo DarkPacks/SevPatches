@@ -28,6 +28,11 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String GET_ENTITY_BOUNDING_BOX;
     public static String CHECK_NO_ENTITY_COLLISION;
 
+    public static String FIND_CHUNKS_FOR_SPAWNING;
+    public static String FIND_CHUNKS_FOR_SPAWNING_DESC;
+    public static String VEC_3I_DISTANCE_SQ;
+    public static String VEC_3I_DISTANCE_SQ_DESC;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -66,6 +71,12 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.ENTITY_GET_CAN_SPAWN_HERE = dev ? "getCanSpawnHere" : "func_70601_bi";
         SevPatchesLoadingPlugin.GET_ENTITY_BOUNDING_BOX = dev ? "getEntityBoundingBox" : "func_174813_aQ";
         SevPatchesLoadingPlugin.CHECK_NO_ENTITY_COLLISION = dev ? "checkNoEntityCollision" : "func_72917_a";
+
+        // Why is this entirely obfuscated in production?
+        SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING = dev ? "findChunksForSpawning" : "a";
+        SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING_DESC = dev ? "(Lnet/minecraft/world/WorldEntitySpawner;Lnet/minecraft/world/WorldServer;ZZZ)I" : "(Loo;ZZZ)I";
+        SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ = dev ? "distanceSq" : "f";
+        SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ_DESC = "(DDD)D";
     }
 
     @Override

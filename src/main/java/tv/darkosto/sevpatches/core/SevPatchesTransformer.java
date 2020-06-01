@@ -14,6 +14,8 @@ public class SevPatchesTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         switch (transformedName) {
+            case "net.minecraft.world.WorldEntitySpawner":
+                return this.spawnChunkSpawning(basicClass);
             case "tehnut.harvest.ReplantHandlers":
                 return this.harvestTransform(basicClass);
             case "mcjty.incontrol.ForgeEventHandlers":
@@ -54,6 +56,59 @@ public class SevPatchesTransformer implements IClassTransformer {
                     ));
             }
         }
+    }
+
+    /**
+     * Make it possible for spawning to occur in the spawn chunks
+     */
+    private byte[] spawnChunkSpawning(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        MethodNode findChunksForSpawning = null;
+
+        for (MethodNode methodNode : classNode.methods) {
+            if (methodNode.name.equals(SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING) && methodNode.desc.equals(SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING_DESC)) {
+                findChunksForSpawning = methodNode;
+            }
+        }
+
+        if (findChunksForSpawning == null) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Couldn't find target method node: WorldEntitySpawner#findChunksForSpawning");
+            return basicClass;
+        }
+
+        MethodInsnNode distanceSq = null;
+        for (ListIterator<AbstractInsnNode> it = findChunksForSpawning.instructions.iterator(); it.hasNext(); ) {
+            AbstractInsnNode insnNode = it.next();
+            if (insnNode instanceof MethodInsnNode) {
+                MethodInsnNode mInsnNode = (MethodInsnNode) insnNode;
+                if (mInsnNode.name.equals(SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ) && mInsnNode.desc.equals(SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ_DESC)) {
+                    distanceSq = (MethodInsnNode) insnNode;
+                }
+            }
+        }
+
+        if (distanceSq == null) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Couldn't find target method invocation: Vec3i#distanceSq");
+            return basicClass;
+        }
+
+        MethodInsnNode distanceSqRedirect = new MethodInsnNode(
+                Opcodes.INVOKESTATIC,
+                "tv/darkosto/sevpatches/core/hooks/SpawnHook",
+                "distanceSqRedirect",
+                "(Lnet/minecraft/util/math/BlockPos;DDD)D",
+                false
+        );
+        findChunksForSpawning.instructions.insert(distanceSq, distanceSqRedirect);
+        findChunksForSpawning.instructions.remove(distanceSq);
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
     }
 
     /**
