@@ -34,6 +34,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return this.fishLiveInWater(basicClass);
             case "com.tmtravlr.jaff.entities.EntityFish":
                 return this.fishAreFish(basicClass);
+            case "nmd.primal.core.common.entities.living.EntityHammerHead":
+                return this.nicerHammerHeads(basicClass);
             default:
                 return basicClass;
         }
@@ -56,6 +58,40 @@ public class SevPatchesTransformer implements IClassTransformer {
                     ));
             }
         }
+    }
+
+    /**
+     * Prevent Primal's Hammerhead from murdering all the fish
+     */
+    private byte[] nicerHammerHeads(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        MethodNode canAttackEntity = null;
+        for (MethodNode methodNode : classNode.methods) {
+            if (methodNode.name.equals("canAttackEntity")) {
+                canAttackEntity = methodNode;
+            }
+        }
+        if (canAttackEntity == null) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Couldn't find target method node: EntityHammerHead#canAttackEntity");
+            return basicClass;
+        }
+
+        LabelNode start = (LabelNode) canAttackEntity.instructions.get(0);
+        InsnList addedCheck = new InsnList();
+        addedCheck.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        addedCheck.add(new TypeInsnNode(Opcodes.INSTANCEOF, "com/tmtravlr/jaff/entities/EntityFish"));
+        addedCheck.add(new JumpInsnNode(Opcodes.IFEQ, start));
+        addedCheck.add(new InsnNode(Opcodes.ICONST_0));
+        addedCheck.add(new InsnNode(Opcodes.IRETURN));
+        canAttackEntity.instructions.insertBefore(start, addedCheck);
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
     }
 
     /**
