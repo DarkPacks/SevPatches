@@ -17,6 +17,6 @@ public class SevPatchesConfig {
         if (!event.getModID().equals("sevpatches")) {
             return;
         }
-        ConfigManager.sync("SevPatches", Config.Type.INSTANCE);
+        ConfigManager.sync("sevpatches", Config.Type.INSTANCE);
     }
 }
