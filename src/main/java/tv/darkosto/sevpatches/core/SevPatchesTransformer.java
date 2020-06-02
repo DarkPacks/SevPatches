@@ -284,6 +284,18 @@ public class SevPatchesTransformer implements IClassTransformer {
         classNode.methods.add(isFishNotColliding);
         SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch: implemented isNotColliding");
 
+        MethodNode isPushedByWater = new MethodNode(Opcodes.ACC_PUBLIC,
+                SevPatchesLoadingPlugin.ENTITY_IS_PUSHED_BY_WATER,
+                "()Z",
+                null,
+                null
+        );
+        InsnList wateryInsns = isPushedByWater.instructions;
+        wateryInsns.add(new InsnNode(Opcodes.ICONST_0));
+        wateryInsns.add(new InsnNode(Opcodes.IRETURN));
+        classNode.methods.add(isPushedByWater);
+        SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch: implemented isPushedByWater");
+
         for (MethodNode methodNode : classNode.methods) {
             if (!methodNode.name.equals(SevPatchesLoadingPlugin.ENTITY_GET_CAN_SPAWN_HERE)) continue;
             InsnList replacement = new InsnList();
