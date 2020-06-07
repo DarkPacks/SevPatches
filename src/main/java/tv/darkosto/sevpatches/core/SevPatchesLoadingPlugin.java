@@ -34,6 +34,10 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String VEC_3I_DISTANCE_SQ;
     public static String VEC_3I_DISTANCE_SQ_DESC;
 
+    public static String INIT_ENTITY_AI;
+    public static String ENTITY_TASKS;
+    public static String ENTITY_TASKS_ADD_TASK;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -79,6 +83,10 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING_DESC = dev ? "(Lnet/minecraft/world/WorldServer;ZZZ)I" : "(Loo;ZZZ)I";
         SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ = dev ? "distanceSq" : "f";
         SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ_DESC = "(DDD)D";
+
+        SevPatchesLoadingPlugin.INIT_ENTITY_AI = dev ? "initEntityAI" : "func_184651_r";
+        SevPatchesLoadingPlugin.ENTITY_TASKS = dev ? "tasks" : "field_70714_bg";
+        SevPatchesLoadingPlugin.ENTITY_TASKS_ADD_TASK = dev ? "addTask" : "func_75776_a";
     }
 
     @Override
