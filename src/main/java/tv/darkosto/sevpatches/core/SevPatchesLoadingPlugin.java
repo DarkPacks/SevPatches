@@ -76,7 +76,7 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
         // Why is this entirely obfuscated in production?
         SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING = dev ? "findChunksForSpawning" : "a";
-        SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING_DESC = dev ? "(Lnet/minecraft/world/WorldEntitySpawner;Lnet/minecraft/world/WorldServer;ZZZ)I" : "(Loo;ZZZ)I";
+        SevPatchesLoadingPlugin.FIND_CHUNKS_FOR_SPAWNING_DESC = dev ? "(Lnet/minecraft/world/WorldServer;ZZZ)I" : "(Loo;ZZZ)I";
         SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ = dev ? "distanceSq" : "f";
         SevPatchesLoadingPlugin.VEC_3I_DISTANCE_SQ_DESC = "(DDD)D";
     }
