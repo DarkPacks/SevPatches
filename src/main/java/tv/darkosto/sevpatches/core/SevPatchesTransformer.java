@@ -30,28 +30,26 @@ public class SevPatchesTransformer implements IClassTransformer {
         switch (transformedName) {
             case "net.minecraft.world.WorldEntitySpawner":
                 return this.spawnChunkSpawning(basicClass);
-            case "tehnut.harvest.ReplantHandlers":
-                return this.harvestTransform(basicClass);
-            case "mcjty.incontrol.ForgeEventHandlers":
-                return this.inControlTransform(basicClass);
-            case "blusunrize.immersiveengineering.common.blocks.metal.TileEntityMetalPress":
-                return this.metalPressTransform(basicClass);
-            case "hellfirepvp.astralsorcery.common.enchantment.amulet.EnchantmentUpgradeHelper":
-                return this.amuletTransform(basicClass);
-            case "hellfirepvp.astralsorcery.common.constellation.effect.aoe.CEffectBootes":
-                return this.bootesRealDrops(basicClass);
-            case "micdoodle8.mods.galacticraft.core.blocks.BlockBasic":
-                return this.galacticraftBlockTransform(basicClass);
-            case "com.tmtravlr.jaff.JAFFEventHandler":
-                return this.unnecessaryLagRemover(basicClass);
             case "com.tmtravlr.jaff.JAFFMod":
                 return this.fishLiveInWater(basicClass);
+            case "com.tmtravlr.jaff.JAFFEventHandler":
+                return this.unnecessaryLagRemover(basicClass);
             case "com.tmtravlr.jaff.entities.EntityFish":
                 return this.fishAreFish(basicClass);
+            case "hellfirepvp.astralsorcery.common.constellation.effect.aoe.CEffectBootes":
+                return this.bootesRealDrops(basicClass);
+            case "hellfirepvp.astralsorcery.common.enchantment.amulet.EnchantmentUpgradeHelper":
+                return this.amuletTransform(basicClass);
+            case "mcjty.incontrol.ForgeEventHandlers":
+                return this.inControlTransform(basicClass);
+            case "micdoodle8.mods.galacticraft.core.blocks.BlockBasic":
+                return this.galacticraftBlockTransform(basicClass);
             case "nmd.primal.core.common.entities.living.EntityHammerHead":
                 return this.nicerHammerHeads(basicClass);
             case "nmd.primal.core.common.entities.living.EntityCanisCampestris":
                 return this.scaredyCat(basicClass);
+            case "tehnut.harvest.ReplantHandlers":
+                return this.harvestTransform(basicClass);
             default:
                 return basicClass;
         }
@@ -541,91 +539,6 @@ public class SevPatchesTransformer implements IClassTransformer {
         insnList.add(new VarInsnNode(Opcodes.ISTORE, 6));
 
         playEffectMN.instructions.insert(insertionPoint, insnList);
-
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-        classNode.accept(classWriter);
-        return classWriter.toByteArray();
-    }
-
-    /**
-     * DarkPacks/SevTech-Ages#3732
-     */
-    private byte[] metalPressTransform(byte[] basicClass) {
-        ClassReader classReader = new ClassReader(basicClass);
-
-        ClassNode classNode = new ClassNode();
-        classReader.accept(classNode, 0);
-
-        for (MethodNode methodNode : classNode.methods) {
-            if (!methodNode.name.equals("onEntityCollision")) continue;
-
-            int targetInsnNodeIndex = -1;
-            for (ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator(); it.hasNext(); ) {
-                AbstractInsnNode insnNode = it.next();
-                if (insnNode instanceof TypeInsnNode) {
-                    TypeInsnNode typeInsnNode = (TypeInsnNode) insnNode;
-                    if (typeInsnNode.getOpcode() == Opcodes.INSTANCEOF
-                            && typeInsnNode.desc.equals("net/minecraft/entity/item/EntityItem")) {
-                        targetInsnNodeIndex = methodNode.instructions.indexOf(insnNode);
-                    }
-                }
-            }
-
-            if (targetInsnNodeIndex == -1) {
-                SevPatchesLoadingPlugin.LOGGER.warn("No location matching the target");
-                continue;
-            }
-
-            LabelNode jumpLocation = null;
-            for (ListIterator<AbstractInsnNode> it = methodNode.instructions.iterator(); it.hasNext(); ) {
-                AbstractInsnNode insnNode = it.next();
-                if (insnNode instanceof LabelNode) {
-                    if (insnNode.getNext().getNext().getNext().getOpcode() == Opcodes.RETURN) {
-                        jumpLocation = (LabelNode) insnNode;
-                        break;
-                    }
-                }
-            }
-            if (jumpLocation == null) {
-                SevPatchesLoadingPlugin.LOGGER.warn("Couldn't find jump location");
-                continue;
-            }
-
-            InsnList patch = new InsnList();
-            patch.add(new VarInsnNode(Opcodes.ALOAD, 2));
-            patch.add(new MethodInsnNode(
-                    Opcodes.INVOKEVIRTUAL,
-                    "java/lang/Object",
-                    "getClass",
-                    "()Ljava/lang/Class;",
-                    false
-            ));
-            patch.add(new MethodInsnNode(
-                    Opcodes.INVOKEVIRTUAL,
-                    "java/lang/Class",
-                    "getName",
-                    "()Ljava/lang/String;",
-                    false
-            ));
-            patch.add(new LdcInsnNode("net.minecraft.entity.item.EntityItem"));
-            patch.add(new MethodInsnNode(
-                    Opcodes.INVOKEVIRTUAL,
-                    "java/lang/String",
-                    "equals",
-                    "(Ljava/lang/Object;)Z",
-                    false
-            ));
-            patch.add(new JumpInsnNode(
-                    Opcodes.IFNE,
-                    jumpLocation
-            ));
-
-
-            methodNode.instructions.insert(
-                    methodNode.instructions.get(targetInsnNodeIndex).getNext(),
-                    patch
-            );
-        }
 
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(classWriter);
