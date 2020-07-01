@@ -48,6 +48,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return this.nicerHammerHeads(basicClass);
             case "nmd.primal.core.common.entities.living.EntityCanisCampestris":
                 return this.scaredyCat(basicClass);
+            case "realdrops.handlers.EventHandler":
+                return this.deregisterEntityJoinHandler(basicClass);
             case "tehnut.harvest.ReplantHandlers":
                 return this.harvestTransform(basicClass);
             default:
@@ -71,6 +73,30 @@ public class SevPatchesTransformer implements IClassTransformer {
                             new String[]{"Lnet/minecraftforge/fml/common/eventhandler/EventPriority;", priority}
                     ));
             }
+        }
+    }
+
+    private void deregisterEventHandler(ClassNode input, String targetMethod) {
+        MethodNode targetMethodNode = null;
+
+        for (MethodNode methodNode : input.methods) {
+            if (!methodNode.name.equals(targetMethod)) continue;
+            targetMethodNode = methodNode;
+            break;
+        }
+
+        if (targetMethodNode == null) {
+            SevPatchesLoadingPlugin.LOGGER.warn("Failed to find handler: {}", targetMethod);
+            return;
+        }
+
+        for (AnnotationNode annotationNode : targetMethodNode.visibleAnnotations) {
+            if (!annotationNode.desc.equals("Lnet/minecraftforge/fml/common/eventhandler/SubscribeEvent;"))
+                continue;
+
+            targetMethodNode.visibleAnnotations.remove(annotationNode);
+            SevPatchesLoadingPlugin.LOGGER.info("Deregistered event handler: {}", targetMethod);
+            break;
         }
     }
 
@@ -251,17 +277,7 @@ public class SevPatchesTransformer implements IClassTransformer {
         ClassNode classNode = new ClassNode();
         classReader.accept(classNode, 0);
 
-        for (MethodNode methodNode : classNode.methods) {
-            if (!methodNode.name.equals("onWorldTick")) continue;
-            for (AnnotationNode annotationNode : methodNode.visibleAnnotations) {
-                if (!annotationNode.desc.equals("Lnet/minecraftforge/fml/common/eventhandler/SubscribeEvent;"))
-                    continue;
-
-                methodNode.visibleAnnotations.remove(annotationNode);
-                SevPatchesLoadingPlugin.LOGGER.info("Disabling custom spawn logic in JAFF");
-                break;
-            }
-        }
+        deregisterEventHandler(classNode, "onWorldTick");
 
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(classWriter);
@@ -616,6 +632,23 @@ public class SevPatchesTransformer implements IClassTransformer {
                 }
             }
         }
+
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        classNode.accept(classWriter);
+        return classWriter.toByteArray();
+    }
+
+    /**
+     * DarkPacks/SevTech-Ages#4179 pt1
+     */
+    private byte[] deregisterEntityJoinHandler(byte[] basicClass) {
+        ClassReader classReader = new ClassReader(basicClass);
+        ClassNode classNode = new ClassNode();
+        classReader.accept(classNode, 0);
+
+        deregisterEventHandler(classNode, "onEntityJoin");
+        deregisterEventHandler(classNode, "onServerTick");
+        deregisterEventHandler(classNode, "onWorldUnload");
 
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         classNode.accept(classWriter);

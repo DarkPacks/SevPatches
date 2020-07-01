@@ -84,6 +84,7 @@ dependencies {
     compile fg.deobf('curse.maven:astralsorcery-1.0.23:2920254')
     compile fg.deobf('curse.maven:jaff-1.7:2448283')
     compile fg.deobf('slimeknights:TConstruct:1.12.2-2.13.0.184')
+    compile 'curse.maven:realisticitemdrops_deobf_1.2.14:2630385'
 }
 
 mixin {
