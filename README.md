@@ -16,12 +16,10 @@ SevTech.
 
 This allows mods which wish to consume the drops array to do so after InControl has made the desired changes.
 
-#### [DarkPacks/SevTech-Ages#3732](https://www.github.com/DarkPacks/SevTech-Ages/issues/3732)
-Patches Immersive Engineering. This patch adds an additional check to the onEntityCollision handler of the metal press.
-The metal press will no longer pick up 'EntityItem's, but will accept all derived classes.
-
-This prevents the metal press from picking up from the temporary vanilla item entity before Real Drops replaces it with
-its own entity.
+#### [DarkPacks/SevTech-Ages#4179](https://www.github.com/DarkPacks/SevTech-Ages/issues/4179)
+Patches Realistic Item Drops. Changes the order of operations when replacing the vanilla item entity. The realistic item
+drop is now constructed at the same time as the vanilla item entity is removed from the world, rather than in the 
+previous tick. This means that changes are reflected in the resulting drop.
 
 #### [DarkPacks/SevTech-Ages#4091](https://www.github.com/DarkPacks/SevTech-Ages/issues/4091)
 Patches Astral Sorcery and Minecraft. There are two components to this patch. The first alters Astral's hooks to use
