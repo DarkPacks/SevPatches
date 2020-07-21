@@ -12,7 +12,7 @@ public abstract class Patch {
     public Patch(byte[] inputClass) {
         inputClassBytes = inputClass;
         ClassReader classReader = new ClassReader(inputClass);
-        ClassNode classNode = new ClassNode();
+        classNode = new ClassNode();
         classReader.accept(classNode, 0);
     }
 
