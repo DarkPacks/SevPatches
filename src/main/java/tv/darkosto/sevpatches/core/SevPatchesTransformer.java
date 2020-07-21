@@ -12,6 +12,7 @@ import tv.darkosto.sevpatches.core.patches.PatchJaffSpawnRemover;
 import tv.darkosto.sevpatches.core.patches.PatchMinecraftSpawnChunkSpawning;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalNicerHammerHeads;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalScaredyCat;
+import tv.darkosto.sevpatches.core.patches.PatchPrimalSpreading;
 import tv.darkosto.sevpatches.core.patches.PatchRidHandlerDeregister;
 
 public class SevPatchesTransformer implements IClassTransformer {
@@ -42,6 +43,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchRidHandlerDeregister(basicClass).apply();
             case "tehnut.harvest.ReplantHandlers":
                 return new PatchHarvestOOO(basicClass).apply();
+            case "nmd.primal.core.api.interfaces.ISpreadBlock":
+                return new PatchPrimalSpreading(basicClass).apply();
             default:
                 return basicClass;
         }

@@ -21,6 +21,7 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String SET_INT;
 
     public static String GET_BLOCK_STATE;
+    public static String NEIGHBOUR_CHANGED;
 
     public static String ENTITY_WORLD;
     public static String ENTITY_IS_NOT_COLLIDING;
@@ -70,6 +71,7 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.SET_INT = dev ? "setInteger" : "func_74768_a";
 
         SevPatchesLoadingPlugin.GET_BLOCK_STATE = dev ? "getBlockState" : "func_180495_p";
+        SevPatchesLoadingPlugin.NEIGHBOUR_CHANGED = dev ? "neighborChanged" : "func_189540_a";
 
         SevPatchesLoadingPlugin.ENTITY_WORLD = dev ? "world" : "field_70170_p";
         SevPatchesLoadingPlugin.ENTITY_IS_NOT_COLLIDING = dev ? "isNotColliding" : "func_70058_J";
