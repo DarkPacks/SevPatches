@@ -22,6 +22,7 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
     public static String GET_BLOCK_STATE;
     public static String NEIGHBOUR_CHANGED;
+    public static String UPDATE_TICK;
 
     public static String ENTITY_WORLD;
     public static String ENTITY_IS_NOT_COLLIDING;
@@ -72,6 +73,7 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
         SevPatchesLoadingPlugin.GET_BLOCK_STATE = dev ? "getBlockState" : "func_180495_p";
         SevPatchesLoadingPlugin.NEIGHBOUR_CHANGED = dev ? "neighborChanged" : "func_189540_a";
+        SevPatchesLoadingPlugin.UPDATE_TICK = dev ? "updateTick" : "func_180650_b";
 
         SevPatchesLoadingPlugin.ENTITY_WORLD = dev ? "world" : "field_70170_p";
         SevPatchesLoadingPlugin.ENTITY_IS_NOT_COLLIDING = dev ? "isNotColliding" : "func_70058_J";

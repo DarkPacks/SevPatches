@@ -18,6 +18,7 @@ public abstract class Patch {
 
     public byte[] apply() {
         if (patch()) {
+            SevPatchesLoadingPlugin.LOGGER.info("{} succeeded", this.getClass().getSimpleName());
             return writeClass();
         } else {
             SevPatchesLoadingPlugin.LOGGER.error("{} failed", this.getClass().getSimpleName());

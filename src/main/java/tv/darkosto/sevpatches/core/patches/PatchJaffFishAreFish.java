@@ -61,7 +61,7 @@ public class PatchJaffFishAreFish extends Patch {
         SevPatchesLoadingPlugin.LOGGER.info("JAFFA patch: implemented isNotColliding");
 
         /*
-        public void isPuhsedByWater() {
+        public boolean isPuhsedByWater() {
             return false;
         }
          */

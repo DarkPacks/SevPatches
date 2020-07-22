@@ -10,9 +10,11 @@ import tv.darkosto.sevpatches.core.patches.PatchJaffFishAreFish;
 import tv.darkosto.sevpatches.core.patches.PatchJaffFishLiveInWater;
 import tv.darkosto.sevpatches.core.patches.PatchJaffSpawnRemover;
 import tv.darkosto.sevpatches.core.patches.PatchMinecraftSpawnChunkSpawning;
+import tv.darkosto.sevpatches.core.patches.PatchPrimalDrying;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalNicerHammerHeads;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalScaredyCat;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalSpreading;
+import tv.darkosto.sevpatches.core.patches.PatchPrinter;
 import tv.darkosto.sevpatches.core.patches.PatchRidHandlerDeregister;
 
 public class SevPatchesTransformer implements IClassTransformer {
@@ -45,6 +47,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchHarvestOOO(basicClass).apply();
             case "nmd.primal.core.api.interfaces.ISpreadBlock":
                 return new PatchPrimalSpreading(basicClass).apply();
+            case "nmd.primal.core.common.blocks.saxum.MudDrying":
+                return new PatchPrimalDrying(basicClass).apply();
             default:
                 return basicClass;
         }
