@@ -14,7 +14,6 @@ import tv.darkosto.sevpatches.core.patches.PatchPrimalDrying;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalNicerHammerHeads;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalScaredyCat;
 import tv.darkosto.sevpatches.core.patches.PatchPrimalSpreading;
-import tv.darkosto.sevpatches.core.patches.PatchPrinter;
 import tv.darkosto.sevpatches.core.patches.PatchRidHandlerDeregister;
 
 public class SevPatchesTransformer implements IClassTransformer {
