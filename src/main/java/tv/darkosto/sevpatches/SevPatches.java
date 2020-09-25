@@ -2,7 +2,17 @@ package tv.darkosto.sevpatches;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryItem;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.LootTable;
+import net.minecraft.world.storage.loot.RandomValueRange;
+import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.functions.LootFunction;
+import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import realdrops.entities.EntityItemLoot;
 import slimeknights.tconstruct.tools.ranged.RangedEvents;
+import twilightforest.item.TFItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +79,23 @@ public class SevPatches {
 
             item.setDead();
             item.setItem(ItemStack.EMPTY);
+        }
+    }
+
+    // Temporary loot adder
+    // TODO: remove
+    @SubscribeEvent
+    public void onLootTableLoad(LootTableLoadEvent event) {
+        ResourceLocation tableName = event.getName();
+        if (tableName.getNamespace().equals("twilightforest") && tableName.getPath().split("/")[0].equals("structures") && !tableName.getPath().matches(".*(common|uncommon|useless|rare|ultrarare)$")) {
+            LootTable table = event.getTable();
+            LootEntry liveRoot = new LootEntryItem(TFItems.liveroot, 1, 1, new LootFunction[]{new SetCount(new LootCondition[]{}, new RandomValueRange(1, 5))}, new LootCondition[]{}, "twilightforest:liveroot");
+
+            LootPool pool = new LootPool(new LootEntry[]{liveRoot}, new LootCondition[]{}, new RandomValueRange(1), new RandomValueRange(0), "liveroot");
+            table.addPool(pool);
+
+            Logger logger = LogManager.getLogger();
+            logger.debug("Adding liveroot pool to {}", tableName);
         }
     }
 
