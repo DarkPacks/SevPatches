@@ -3,7 +3,6 @@ package tv.darkosto.sevpatches.core;
 import net.minecraft.launchwrapper.IClassTransformer;
 import tv.darkosto.sevpatches.core.patches.PatchAstralAmulet;
 import tv.darkosto.sevpatches.core.patches.PatchAstralBootesCheat;
-import tv.darkosto.sevpatches.core.patches.PatchGcPickBlock;
 import tv.darkosto.sevpatches.core.patches.PatchHarvestOOO;
 import tv.darkosto.sevpatches.core.patches.PatchInControlHandlerPriority;
 import tv.darkosto.sevpatches.core.patches.PatchJaffFishAreFish;
@@ -34,8 +33,6 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchAstralAmulet(basicClass).apply();
             case "mcjty.incontrol.ForgeEventHandlers":
                 return new PatchInControlHandlerPriority(basicClass).apply();
-            case "micdoodle8.mods.galacticraft.core.blocks.BlockBasic":
-                return new PatchGcPickBlock(basicClass).apply();
             case "nmd.primal.core.common.entities.living.EntityHammerHead":
                 return new PatchPrimalNicerHammerHeads(basicClass).apply();
             case "nmd.primal.core.common.entities.living.EntityCanisCampestris":
