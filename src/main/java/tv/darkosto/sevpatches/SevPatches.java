@@ -69,6 +69,8 @@ public class SevPatches {
             item.setDead();
             item.setItem(ItemStack.EMPTY);
         }
+
+        itemList.clear();
     }
 
     @Mod.EventHandler
