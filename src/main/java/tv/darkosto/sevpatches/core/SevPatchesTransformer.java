@@ -1,19 +1,7 @@
 package tv.darkosto.sevpatches.core;
 
 import net.minecraft.launchwrapper.IClassTransformer;
-import tv.darkosto.sevpatches.core.patches.PatchAstralAmulet;
-import tv.darkosto.sevpatches.core.patches.PatchAstralBootesCheat;
-import tv.darkosto.sevpatches.core.patches.PatchHarvestOOO;
-import tv.darkosto.sevpatches.core.patches.PatchInControlHandlerPriority;
-import tv.darkosto.sevpatches.core.patches.PatchJaffFishAreFish;
-import tv.darkosto.sevpatches.core.patches.PatchJaffFishLiveInWater;
-import tv.darkosto.sevpatches.core.patches.PatchJaffSpawnRemover;
-import tv.darkosto.sevpatches.core.patches.PatchMinecraftSpawnChunkSpawning;
-import tv.darkosto.sevpatches.core.patches.PatchPrimalDrying;
-import tv.darkosto.sevpatches.core.patches.PatchPrimalNicerHammerHeads;
-import tv.darkosto.sevpatches.core.patches.PatchPrimalScaredyCat;
-import tv.darkosto.sevpatches.core.patches.PatchPrimalSpreading;
-import tv.darkosto.sevpatches.core.patches.PatchRidHandlerDeregister;
+import tv.darkosto.sevpatches.core.patches.*;
 
 public class SevPatchesTransformer implements IClassTransformer {
     @Override
@@ -31,6 +19,9 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchAstralBootesCheat(basicClass).apply();
             case "hellfirepvp.astralsorcery.common.enchantment.amulet.EnchantmentUpgradeHelper":
                 return new PatchAstralAmulet(basicClass).apply();
+            case "hellfirepvp.astralsorcery.common.item.tool.ItemCrystalAxe":
+            case "hellfirepvp.astralsorcery.common.item.tool.ItemCrystalPickaxe":
+                return new PatchAstralTools(basicClass).apply();
             case "mcjty.incontrol.ForgeEventHandlers":
                 return new PatchInControlHandlerPriority(basicClass).apply();
             case "nmd.primal.core.common.entities.living.EntityHammerHead":

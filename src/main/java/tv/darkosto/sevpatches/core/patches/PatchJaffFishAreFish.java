@@ -22,7 +22,7 @@ public class PatchJaffFishAreFish extends Patch {
     protected boolean patch() {
         /*
         public boolean isNotColliding() {
-            this.world.checkNoEntityCollision(this.getEntityBoundingBox(), this);
+            return this.world.checkNoEntityCollision(this.getEntityBoundingBox(), this);
         }
          */
         MethodNode isFishNotColliding = new MethodNode(

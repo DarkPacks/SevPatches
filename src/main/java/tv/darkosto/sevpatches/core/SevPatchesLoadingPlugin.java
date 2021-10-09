@@ -40,6 +40,16 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String ENTITY_TASKS;
     public static String ENTITY_TASKS_ADD_TASK;
 
+    public static String GET_DESTROY_SPEED;
+    public static String GET_MATERIAL;
+    public static String EFFICIENCY;
+    public static String MATERIAL_ANVIL;
+    public static String MATERIAL_IRON;
+    public static String MATERIAL_PLANTS;
+    public static String MATERIAL_ROCK;
+    public static String MATERIAL_VINE;
+    public static String MATERIAL_WOOD;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -91,6 +101,16 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.INIT_ENTITY_AI = dev ? "initEntityAI" : "func_184651_r";
         SevPatchesLoadingPlugin.ENTITY_TASKS = dev ? "tasks" : "field_70714_bg";
         SevPatchesLoadingPlugin.ENTITY_TASKS_ADD_TASK = dev ? "addTask" : "func_75776_a";
+
+        SevPatchesLoadingPlugin.GET_DESTROY_SPEED = dev ? "getDestroySpeed" : "func_150893_a";
+        SevPatchesLoadingPlugin.GET_MATERIAL = dev ? "getMaterial" : "func_185904_a";
+        SevPatchesLoadingPlugin.EFFICIENCY = dev ? "efficiency" : "field_77864_a";
+        SevPatchesLoadingPlugin.MATERIAL_ANVIL = dev ? "ANVIL" : "field_151574_g";
+        SevPatchesLoadingPlugin.MATERIAL_IRON = dev ? "IRON" : "field_151573_f";
+        SevPatchesLoadingPlugin.MATERIAL_PLANTS = dev ? "PLANTS" : "field_151585_k";
+        SevPatchesLoadingPlugin.MATERIAL_ROCK = dev ? "ROCK" : "field_151576_e";
+        SevPatchesLoadingPlugin.MATERIAL_VINE = dev ? "VINE" : "field_151582_l";
+        SevPatchesLoadingPlugin.MATERIAL_WOOD = dev ? "WOOD" : "field_151575_d";
     }
 
     @Override

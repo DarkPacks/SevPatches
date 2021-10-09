@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Mod(modid = "sevpatches")
+@Mod(modid = "sevpatches", acceptableRemoteVersions = "*")
 public class SevPatches {
     public static Logger LOGGER = LogManager.getLogger("sevpatches");
     List<EntityItem> itemList = new ArrayList<>();

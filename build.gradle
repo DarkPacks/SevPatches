@@ -1,7 +1,7 @@
 buildscript {
     repositories {
+        maven { url = 'https://repo.spongepowered.org/maven' }
         maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'http://repo.spongepowered.org/maven' }
         jcenter()
         mavenCentral()
     }
@@ -9,10 +9,6 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
         classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
-}
-
-plugins {
-    id 'com.wynprice.cursemaven' version '2.1.4'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -36,8 +32,8 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 minecraft {
     mappings channel: 'stable', version: '39-1.12'
+    accessTransformer = file('src/main/resources/META-INF/sevpatches_at.cfg')
 
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
             workingDirectory project.file('run')
@@ -70,21 +66,22 @@ configurations {
 }
 
 repositories {
-    maven { url "http://repo.spongepowered.org/maven" }
+    maven { url "https://repo.spongepowered.org/maven" }
     maven { url 'https://dvs1.progwml6.com/files/maven' }
+    maven { url "https://www.cursemaven.com" }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
 
     shade('org.spongepowered:mixin:0.8') {
         transitive = false
     }
 
-    compile fg.deobf('curse.maven:astralsorcery-1.0.23:2920254')
-    compile fg.deobf('curse.maven:jaff-1.7:2448283')
-    compile fg.deobf('slimeknights:TConstruct:1.12.2-2.13.0.184')
-    compile 'curse.maven:realisticitemdrops_deobf_1.2.14:2630385'
+    compile 'curse.maven:astralsorcery-1.0.23-241721:2920254'
+    compile 'curse.maven:jaff-1.7-235261:2448283'
+    compile 'slimeknights:TConstruct:1.12.2-2.13.0.184'
+    compile 'curse.maven:realisticitemdrops_deobf_1.2.14-245620:2630385'
 }
 
 mixin {
@@ -105,6 +102,7 @@ jar {
                 "FMLCorePlugin"              : "tv.darkosto.sevpatches.core.SevPatchesLoadingPlugin",
                 "FMLCorePluginContainsFMLMod": "true",
                 "ForceLoadAsMod"             : "true",
+                "FMLAT"                      : "sevpatches_at.cfg",
         ])
     }
 
