@@ -72,14 +72,14 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2860'
 
     shade('org.spongepowered:mixin:0.8') {
         transitive = false
     }
 
     compile 'curse.maven:astralsorcery-1.0.23-241721:2920254'
-    compile 'curse.maven:jaff-1.7-235261:2448283'
+    compile fg.deobf('curse.maven:jaff-1.7-235261:2448283')
     compile 'slimeknights:TConstruct:1.12.2-2.13.0.184'
     compile 'curse.maven:realisticitemdrops_deobf_1.2.14-245620:2630385'
 }
