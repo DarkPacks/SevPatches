@@ -36,6 +36,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchPrimalSpreading(basicClass).apply();
             case "nmd.primal.core.common.blocks.saxum.MudDrying":
                 return new PatchPrimalDrying(basicClass).apply();
+            case "micdoodle8.mods.galacticraft.core.tile.TileEntityInventory":
+                return new PatchGalacticraftInventories(basicClass).apply();
             default:
                 return basicClass;
         }

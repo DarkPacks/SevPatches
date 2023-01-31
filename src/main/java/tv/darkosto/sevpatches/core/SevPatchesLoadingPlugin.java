@@ -50,6 +50,8 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String MATERIAL_VINE;
     public static String MATERIAL_WOOD;
 
+    public static String IS_EMPTY;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -111,6 +113,8 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.MATERIAL_ROCK = dev ? "ROCK" : "field_151576_e";
         SevPatchesLoadingPlugin.MATERIAL_VINE = dev ? "VINE" : "field_151582_l";
         SevPatchesLoadingPlugin.MATERIAL_WOOD = dev ? "WOOD" : "field_151575_d";
+
+        SevPatchesLoadingPlugin.IS_EMPTY = dev ? "isEmpty" : "func_191420_l";
     }
 
     @Override
