@@ -42,7 +42,7 @@ public class PatchGalacticraftInventories extends Patch {
         ));
         insnList.add(new InsnNode(Opcodes.ACONST_NULL));
         insnList.add(new JumpInsnNode(Opcodes.IF_ACMPNE, afterNull));
-        insnList.add(new InsnNode(Opcodes.ICONST_0));
+        insnList.add(new InsnNode(Opcodes.ICONST_1));
         insnList.add(new InsnNode(Opcodes.IRETURN));
         insnList.add(new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
         insnList.add(afterNull);
