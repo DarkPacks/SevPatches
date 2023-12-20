@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import tv.darkosto.sevpatches.SevPatches;
 
 @Mixin(value = Chunk.class, priority = 1500)
@@ -20,11 +21,9 @@ public abstract class ChunkTEMixin {
     @Shadow
     public abstract IBlockState getBlockState(BlockPos pos);
 
-    @Inject(method = "createNewTileEntity", at = @At(value = "HEAD"), cancellable = true, require = 1)
-    private void skipTileEntityIfLoading(BlockPos blockPos, CallbackInfoReturnable<TileEntity> cir) {
-        IBlockState blockState = this.getBlockState(blockPos);
-        Block block = blockState.getBlock();
-        if (this.loadingTileEntities && block.hasTileEntity(blockState)) {
+    @Inject(method = "createNewTileEntity", at = @At(value = "RETURN"), cancellable = true, require = 1, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void skipTileEntityIfLoading(BlockPos blockPos, CallbackInfoReturnable<TileEntity> cir, IBlockState iblockstate, Block block) {
+        if (this.loadingTileEntities && block.hasTileEntity(iblockstate)) {
             SevPatches.LOGGER.warn("#########################################################################");
             SevPatches.LOGGER.warn("A mod has attempted to add a TileEntity to a chunk during chunk loading; this may result in iterator invalidation");
             SevPatches.LOGGER.warn("This attempt has been blocked, which may lead to some weirdness, e.g. pipes not connecting");
