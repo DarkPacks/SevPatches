@@ -2,7 +2,6 @@ buildscript {
     repositories {
         maven { url = 'https://repo.spongepowered.org/maven' }
         maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -79,7 +78,7 @@ dependencies {
     }
 
     compile 'curse.maven:astralsorcery-1.0.23-241721:2920254'
-    compile fg.deobf('curse.maven:jaff-1.7-235261:2448283')
+    compile 'curse.maven:jaff-1.7-235261:2448284'
     compile 'slimeknights:TConstruct:1.12.2-2.13.0.184'
     compile 'curse.maven:realisticitemdrops_deobf_1.2.14-245620:2630385'
 }
