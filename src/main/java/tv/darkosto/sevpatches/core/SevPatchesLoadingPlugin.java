@@ -52,6 +52,9 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
     public static String IS_EMPTY;
 
+    public static String WOODEN_HOE;
+    public static String PRISMARINE_SHARD;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -115,6 +118,9 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.MATERIAL_WOOD = dev ? "WOOD" : "field_151575_d";
 
         SevPatchesLoadingPlugin.IS_EMPTY = dev ? "isEmpty" : "func_191420_l";
+
+        SevPatchesLoadingPlugin.WOODEN_HOE = dev ? "WOODEN_HOE" : "field_151017_I";
+        SevPatchesLoadingPlugin.PRISMARINE_SHARD = dev ? "PRISMARINE_SHARD" : "field_179562_cC";
     }
 
     @Override

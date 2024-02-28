@@ -38,6 +38,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchPrimalDrying(basicClass).apply();
             case "micdoodle8.mods.galacticraft.core.tile.TileEntityInventory":
                 return new PatchGalacticraftInventories(basicClass).apply();
+            case "micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling":
+                return new PatchGalacticraftSlimeling(basicClass).apply();
             default:
                 return basicClass;
         }
