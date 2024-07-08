@@ -40,6 +40,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchGalacticraftInventories(basicClass).apply();
             case "micdoodle8.mods.galacticraft.planets.mars.entities.EntitySlimeling":
                 return new PatchGalacticraftSlimeling(basicClass).apply();
+            case "net.darkhax.infoaccessories.info.InfoType":
+                return new PatchInfoAccCompass(basicClass).apply();
             default:
                 return basicClass;
         }

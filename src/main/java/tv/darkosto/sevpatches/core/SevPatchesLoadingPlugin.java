@@ -55,6 +55,10 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String WOODEN_HOE;
     public static String PRISMARINE_SHARD;
 
+    public static String ENTITY_ROTATION_YAW;
+    public static String POSITIVE_MODULO;
+    public static String FLOOR;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -121,6 +125,10 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
         SevPatchesLoadingPlugin.WOODEN_HOE = dev ? "WOODEN_HOE" : "field_151017_I";
         SevPatchesLoadingPlugin.PRISMARINE_SHARD = dev ? "PRISMARINE_SHARD" : "field_179562_cC";
+
+        SevPatchesLoadingPlugin.ENTITY_ROTATION_YAW = dev ? "rotationYaw" : "field_70177_z";
+        SevPatchesLoadingPlugin.POSITIVE_MODULO = dev ? "positiveModulo" : "func_188207_b";
+        SevPatchesLoadingPlugin.FLOOR = dev ? "floor" : "func_76141_d";
     }
 
     @Override
