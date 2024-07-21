@@ -59,6 +59,9 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String POSITIVE_MODULO;
     public static String FLOOR;
 
+    public static String GRAB_MOUSE_CURSOR;
+    public static String UNGRAB_MOUSE_CURSOR;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -129,6 +132,9 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
         SevPatchesLoadingPlugin.ENTITY_ROTATION_YAW = dev ? "rotationYaw" : "field_70177_z";
         SevPatchesLoadingPlugin.POSITIVE_MODULO = dev ? "positiveModulo" : "func_188207_b";
         SevPatchesLoadingPlugin.FLOOR = dev ? "floor" : "func_76141_d";
+
+        SevPatchesLoadingPlugin.GRAB_MOUSE_CURSOR = dev ? "grabMouseCursor" : "a";
+        SevPatchesLoadingPlugin.UNGRAB_MOUSE_CURSOR = dev ? "ungrabMouseCursor" : "b";
     }
 
     @Override

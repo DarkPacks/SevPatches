@@ -7,6 +7,8 @@ public class SevPatchesTransformer implements IClassTransformer {
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         switch (transformedName) {
+            case "net.minecraft.util.MouseHelper":
+                return new PatchMacMouse(basicClass).apply();
             case "net.minecraft.world.WorldEntitySpawner":
                 return new PatchMinecraftSpawnChunkSpawning(basicClass).apply();
             case "com.tmtravlr.jaff.JAFFMod":
@@ -43,6 +45,9 @@ public class SevPatchesTransformer implements IClassTransformer {
             case "net.darkhax.infoaccessories.info.InfoType":
                 return new PatchInfoAccCompass(basicClass).apply();
             default:
+                if (transformedName.contains("com.TominoCZ.FBP")) {
+                    return new PatchMacMouseFBP(basicClass).apply();
+                }
                 return basicClass;
         }
     }
