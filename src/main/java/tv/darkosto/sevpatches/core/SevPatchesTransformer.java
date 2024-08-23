@@ -11,6 +11,9 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchMacMouse(basicClass).apply();
             case "net.minecraft.world.WorldEntitySpawner":
                 return new PatchMinecraftSpawnChunkSpawning(basicClass).apply();
+            case "com.TominoCZ.FBP.gui.FBPGuiBlacklist":
+            case "com.TominoCZ.FBP.handler.FBPKeyInputHandler":
+                return new PatchMacMouseFBP(basicClass).apply();
             case "com.tmtravlr.jaff.JAFFMod":
                 return new PatchJaffFishLiveInWater(basicClass).apply();
             case "com.tmtravlr.jaff.JAFFEventHandler":
@@ -45,9 +48,6 @@ public class SevPatchesTransformer implements IClassTransformer {
             case "net.darkhax.infoaccessories.info.InfoType":
                 return new PatchInfoAccCompass(basicClass).apply();
             default:
-                if (transformedName.contains("com.TominoCZ.FBP")) {
-                    return new PatchMacMouseFBP(basicClass).apply();
-                }
                 return basicClass;
         }
     }

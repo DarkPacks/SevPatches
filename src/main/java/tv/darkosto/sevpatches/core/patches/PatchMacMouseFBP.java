@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public class PatchMacMouseFBP extends PatchMacMouse {
+public class PatchMacMouseFBP extends PatchMac {
     public PatchMacMouseFBP(byte[] inputClass) {
         super(inputClass);
     }

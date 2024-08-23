@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import static tv.darkosto.sevpatches.core.SevPatchesLoadingPlugin.*;
 
-public class PatchMacMouse extends Patch {
+public class PatchMacMouse extends PatchMac {
     public PatchMacMouse(byte[] inputClass) {
         super(inputClass);
     }
@@ -22,16 +22,6 @@ public class PatchMacMouse extends Patch {
         ungrabMouse.instructions.insert(generateInsns(false));
 
         return true;
-    }
-
-    @Override
-    public byte[] apply() {
-        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-        if (!osName.contains("mac")) {
-            LOGGER.info("Skipping mouse patch; os is not macOS");
-            return inputClassBytes;
-        }
-        return super.apply();
     }
 
     private InsnList generateInsns(boolean checkGrab) {
