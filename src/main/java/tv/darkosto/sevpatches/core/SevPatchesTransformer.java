@@ -47,6 +47,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchGalacticraftSlimeling(basicClass).apply();
             case "net.darkhax.infoaccessories.info.InfoType":
                 return new PatchInfoAccCompass(basicClass).apply();
+            case "net.darkhax.jmapstages.JMapPermissionHandler":
+                return new PatchJMapStagesStutter(basicClass).apply();
             default:
                 return basicClass;
         }
