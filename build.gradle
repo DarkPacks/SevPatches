@@ -19,7 +19,7 @@ apply plugin: 'maven-publish'
 def buildnumber = null
 
 if (System.getenv('GITHUB_ACTIONS'))
-    buildnumber = System.getenv('GITHUB_WORKFLOW') == 'Release' ? System.getenv('GITHUB_RUN_NUMBER') : System.getenv('GITHUB_SHA').substring(0, 7)
+    buildnumber = System.getenv('GITHUB_RUN_NUMBER')
 
 def suffix = buildnumber != null ? buildnumber : 'SNAPSHOT'
 
