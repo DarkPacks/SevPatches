@@ -21,7 +21,7 @@ public class PatchMacMouseFBP extends PatchMac {
         for (MethodNode method : classNode.methods) {
             InsnList insnList = method.instructions;
             Iterable<AbstractInsnNode> insnsIter = insnList::iterator;
-            Stream<AbstractInsnNode> insns = StreamSupport.stream(insnsIter.spliterator(), true);
+            Stream<AbstractInsnNode> insns = StreamSupport.stream(insnsIter.spliterator(), false);
 
             insns.filter(insn -> insn instanceof MethodInsnNode)
                     .map(insn -> (MethodInsnNode) insn)

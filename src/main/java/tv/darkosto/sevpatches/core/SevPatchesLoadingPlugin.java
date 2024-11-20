@@ -62,6 +62,9 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
     public static String GRAB_MOUSE_CURSOR;
     public static String UNGRAB_MOUSE_CURSOR;
 
+    public static String ENTITY_ON_ENTITY_COLLISION;
+    public static String ITEMSTACK_IS_ITEM_EQUAL;
+
     public SevPatchesLoadingPlugin() {
         LOGGER.info("setting up mixin environment");
         MixinBootstrap.init();
@@ -135,6 +138,9 @@ public class SevPatchesLoadingPlugin implements IFMLLoadingPlugin {
 
         SevPatchesLoadingPlugin.GRAB_MOUSE_CURSOR = dev ? "grabMouseCursor" : "a";
         SevPatchesLoadingPlugin.UNGRAB_MOUSE_CURSOR = dev ? "ungrabMouseCursor" : "b";
+
+        SevPatchesLoadingPlugin.ENTITY_ON_ENTITY_COLLISION = dev ? "onEntityCollision" : "func_180634_a";
+        SevPatchesLoadingPlugin.ITEMSTACK_IS_ITEM_EQUAL = dev ? "isItemEqual" : "func_77969_a";
     }
 
     @Override

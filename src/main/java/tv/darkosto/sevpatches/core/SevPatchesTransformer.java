@@ -33,6 +33,8 @@ public class SevPatchesTransformer implements IClassTransformer {
                 return new PatchPrimalNicerHammerHeads(basicClass).apply();
             case "nmd.primal.core.common.entities.living.EntityCanisCampestris":
                 return new PatchPrimalScaredyCat(basicClass).apply();
+            case "nmd.primal.core.common.blocks.machines.Barrel":
+                return new PatchPrimalBarrel(basicClass).apply();
             case "realdrops.handlers.EventHandler":
                 return new PatchRidHandlerDeregister(basicClass).apply();
             case "tehnut.harvest.ReplantHandlers":
